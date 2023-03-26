@@ -1,0 +1,12 @@
+src/
+build/
+gradle/
+.gradle/
+
+gradlew
+gradlew.bat
+settings.gradle
+
+Dockerfile
+build.gradle
+.dockerignore

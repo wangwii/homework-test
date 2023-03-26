@@ -1,0 +1,73 @@
+version: '3'
+
+volumes:
+  mysqldb-data:
+
+services:
+  # 负载均衡启动入口
+  lb:
+    build: ./lb
+    image: ${IMAGE:-rex/lb}:${TAG:-dev}
+    ports:
+      - "80:80"
+    links:
+      - app
+    environment:
+      - LANG=en_US.UTF-8
+      - APP_HOST_NAME=app
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4096M
+
+  # 应用前台配置及启动入口
+  app:
+    build: ./app/web
+    image: ${IMAGE:-rex/web}:${TAG:-dev}
+    links:
+      - api
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+
+  # 应用后台配置及启动入口
+  api:
+    build: ./app/api
+    image: ${IMAGE:-rex/api}:${TAG:-dev}
+    links:
+      - mysql8
+    environment:
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin@pwd
+      - SPRING.DATASOURCE.DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql8/demodb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4096M
+
+  # 数据库配置及启动入口
+  mysql8:
+    image: mysql:8.0.32
+    restart: always
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin@pwd
+      MYSQL_DATABASE: demodb
+      MYSQL_ROOT_PASSWORD: root@pwd
+    volumes:
+      - mysqldb-data:/var/lib/mysql
+      - ./database/initdb.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --transaction-isolation=READ-COMMITTED
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4096M
