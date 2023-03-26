@@ -1,7 +1,8 @@
 # Shenzhou
 基于 docker 和 docker-compose 工具改造原应用，采用基于容器的新部署架构。
-![分层架构图](./layers.png "分层架构示意图")
-![部署结构示意图](./picture.png "部署结构示意图")
+
+<img src="./layers.png" width="280px" alt="分层架构示意图"/>
+<img src="./picture.png" width="118px" alt="部署结构示意图"/>
 
 ### 一. 实现思路说明
 * 按功能将原系统分为以下4个模块：
