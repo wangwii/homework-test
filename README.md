@@ -3,7 +3,7 @@
 ![分层架构图](./layers.png "分层架构示意图")
 ![部署结构示意图](./picture.png "部署结构示意图")
 
-### 实现思路说明
+### 一. 实现思路说明
 * 按功能将原系统分为以下4个模块：
   + 负载均衡：lb 子目录下；
   + 应用前端：app/web 子目录下；
@@ -15,7 +15,7 @@
 * 利用 docker-compose scale 功能，将应用前后台服务扩展到两个运行实例，为实现负载均衡和高可用架构做好准备；
 * 利用 nginx 作为负载均衡服务，提供对流量入口的统一管理，负载均衡的流量分发功能依托 docker 内置的DNS系统实现；
 
-#### 测试运行命令说明
+### 二. 测试运行命令说明
 0. 假设目标运行环境为Ubunt，并已具备 docker 和 docker-compose 命令；
 1. 准备 docker 镜像：
 ```
@@ -34,8 +34,8 @@
   docker-compose logs
 ```
 
-#### 按模块代码说明
-##### 应用前台
+### 三. 按模块代码说明
+#### 应用前台
 前台 web 应用的部署配置及脚本在 app/web 目录下，为方便演示模拟了前台 web 应用：web/dist.tar.gz，并假设运行环境为 nginx 1.23.3。
 [注意：为了使用 Dockerfile 的 ADD 命令自动解压dist文件，将原.zip后缀修改成：.tar.gz]
 
@@ -50,6 +50,6 @@ MySQL 数据库服务的配置及脚本在 database 目录下，采用 mysql 8.0
 负载均衡服务配置及脚本在 lb 目录下，采用 nginx 1.23.3 版本，通过环境变量可配置目标应用的Host Name及权重信息，未来若有调整负载均衡算法的需求，可进一步完善：etc/nginx/templates/default.conf.template 文件。
 
 
-### 参考信息
+### 四. 参考信息
 * https://snapcraft.io/docker
 * https://docs.docker.com/compose/compose-file/compose-file-v3
